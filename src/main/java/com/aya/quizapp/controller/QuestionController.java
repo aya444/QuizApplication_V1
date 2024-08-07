@@ -1,6 +1,7 @@
 package com.aya.quizapp.controller;
 
 
+import com.aya.quizapp.exception.InvalidQuizDataException;
 import com.aya.quizapp.exception.QuestionNotFoundException;
 import com.aya.quizapp.model.dto.QuestionInputDto;
 import com.aya.quizapp.model.dto.QuestionOutputDto;
@@ -13,9 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-
 @RestController
 @RequestMapping("question")
 @Validated
@@ -26,32 +24,31 @@ public class QuestionController {
 
     // TODO make a Global Exception Handler
     @GetMapping("all")
-    public ResponseEntity<List<QuestionOutputDto>> getAllQuetions(){
+    public ResponseEntity<?> getAllQuestions() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getAllQuestions());
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 
     @GetMapping("category/{cat}")
-    public ResponseEntity<List<QuestionOutputDto>> getQuestionsByCategory(@PathVariable("cat") @NotNull String category){
-        try{
+    public ResponseEntity<?> getQuestionsByCategory(@PathVariable("cat") @NotNull String category) {
+        try {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getQuestionsByCategory(category));
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 
     @PostMapping("add")
-    public ResponseEntity<QuestionOutputDto> addQuestions(@RequestBody QuestionInputDto questionInputDto){
+    public ResponseEntity<QuestionOutputDto> addQuestions(@RequestBody @Valid QuestionInputDto questionInputDto) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(questionInputDto));
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        } catch (InvalidQuizDataException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -61,19 +58,23 @@ public class QuestionController {
             QuestionOutputDto updatedQuestion = questionService.editQuestion(id, updatedQuestionInputDto);
             return ResponseEntity.status(HttpStatus.OK).body(updatedQuestion);
         } catch (QuestionNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        } catch (InvalidQuizDataException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deleteQuestion(@PathVariable @NotNull Integer id){
-        try{
+    public ResponseEntity<String> deleteQuestion(@PathVariable @NotNull Integer id) {
+        try {
             questionService.deleteQuestion(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Question with id "+ id +" is successfully deleted!");
-        }catch (QuestionNotFoundException e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body("Question with id " + id + " is successfully deleted!");
+        } catch (QuestionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 }

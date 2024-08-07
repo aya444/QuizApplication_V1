@@ -1,5 +1,6 @@
 package com.aya.quizapp.service;
 
+import com.aya.quizapp.exception.InvalidQuizDataException;
 import com.aya.quizapp.exception.QuestionNotFoundException;
 import com.aya.quizapp.exception.QuizNotFoundException;
 import com.aya.quizapp.model.dto.QuestionOutputDto;
@@ -7,7 +8,7 @@ import com.aya.quizapp.model.dto.QuizDto;
 import com.aya.quizapp.model.entity.Question;
 import com.aya.quizapp.model.entity.Quiz;
 import com.aya.quizapp.model.entity.Response;
-import com.aya.quizapp.repository.QuizRepo;
+import com.aya.quizapp.repository.QuizRepository;
 import com.aya.quizapp.util.QuizMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,29 +20,32 @@ import java.util.*;
 public class QuizService {
 
     @Autowired
-    private QuizRepo quizRepo;
+    private QuizRepository quizRepository;
 
     private final QuizMapper quizMapper = QuizMapper.INSTANCE;
 
-    public QuizDto createQuiz(String category, int numQ, String title) {
-        if (numQ <= 0) {
-            throw new IllegalArgumentException("Number of questions must be greater than 0");
+    public QuizDto createQuiz(String category, int numOfQuestions, String title) {
+        if (numOfQuestions <= 0) {
+            throw new InvalidQuizDataException("Number of questions must be greater than 0");
         }
 
-        List<Question> foundRandomQuestionsForCategory = quizRepo.findRandomQuestionsByCategory(category, numQ);
+        List<Question> foundRandomQuestionsForCategory = quizRepository.findRandomQuestionsByCategory(category, numOfQuestions);
         if (foundRandomQuestionsForCategory.isEmpty()) {
             throw new QuestionNotFoundException("No questions found for the given category: " + category);
         }
 
-        Quiz quiz = quizRepo.save(Quiz.builder()
+        Quiz quiz = quizRepository.save(Quiz.builder()
                 .title(title)
                 .questions(foundRandomQuestionsForCategory)
                 .build());
-        return quizMapper.toDto(quiz);
+        return quizMapper.fromEntityToDto(quiz);
     }
 
     public List<QuestionOutputDto> getQuizQuestions(Integer id) {
-        Optional<Quiz> quizOptional = quizRepo.findById(id);
+        Optional<Quiz> quizOptional = quizRepository.findById(id);
+
+        if (quizOptional.isEmpty()) throw new QuizNotFoundException("Quiz Not Found!");
+
         Quiz quiz = quizOptional.get();
         List<Question> questionList = quiz.getQuestions();
         List<QuestionOutputDto> questionsOutputDto = new ArrayList<>();
@@ -60,14 +64,14 @@ public class QuizService {
     }
 
     public int calculateResults(Integer id, @Valid List<Response> responseList) {
-        Quiz quiz = quizRepo.findById(id).orElseThrow(() -> new QuizNotFoundException("Quiz Not Found!"));
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new QuizNotFoundException("Quiz Not Found!"));
         List<Question> questionsList = quiz.getQuestions();
 
         if (responseList.size() != questionsList.size()) {
-            throw new QuizNotFoundException("Mismatch between the number of responses and questions");
+            throw new InvalidQuizDataException("Mismatch between the number of responses and questions!");
         }
 
-        int total=0;
+        int total = 0;
         for (int i = 0; i < responseList.size(); i++) {
             if (responseList.get(i).getResponse().equals(questionsList.get(i).getRightAnswer())) {
                 total++;

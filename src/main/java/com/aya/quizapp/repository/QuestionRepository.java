@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QuestionRepo extends JpaRepository<Question, Integer> {
+public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     @Query("SELECT q FROM Question q ORDER BY q.id ASC ")
-    public List<Question> findAllQuestionsSorted();
+    List<Question> findAllQuestionsSorted();
 
-    public List<Question> findByCategory(String category);
+    List<Question> findByCategory(String category);
 }

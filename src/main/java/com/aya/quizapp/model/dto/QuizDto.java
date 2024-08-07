@@ -9,9 +9,6 @@ import java.util.List;
 
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class QuizDto {
     private Integer id;
 

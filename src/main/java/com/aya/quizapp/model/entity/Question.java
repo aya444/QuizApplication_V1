@@ -5,9 +5,7 @@ import lombok.*;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "question")
 public class Question {
 
@@ -15,7 +13,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, nullable = false)
     private Integer id;
-    @Column(name = "questiontitle", nullable = false)
+    @Column(name = "question_title", nullable = false)
     private String questionTitle;
     @Column(name = "option1", nullable = false)
     private String option1;
@@ -25,9 +23,9 @@ public class Question {
     private String option3;
     @Column(name = "option4", nullable = false)
     private String option4;
-    @Column(name = "difficultylevel", nullable = false)
+    @Column(name = "difficulty_level", nullable = false)
     private String difficultyLevel;
-    @Column(name = "rightanswer", nullable = false)
+    @Column(name = "right_answer", nullable = false)
     private String rightAnswer;
     @Column(name = "category", nullable = false)
     private String category;

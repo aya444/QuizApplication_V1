@@ -12,10 +12,10 @@ import org.mapstruct.factory.Mappers;
 public interface QuestionMapper {
     QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
 
-    QuestionOutputDto toOutputDto(Question question);
+    QuestionOutputDto fromEntityToDto(Question question);
 
-    Question toEntity(QuestionInputDto questionInputDto);
+    Question fromDtoToEntity(QuestionInputDto questionInputDto);
 
-    @Mapping(target = "id", ignore = true) // Ignore ID during updates
+    @Mapping(target = "id", ignore = true)
     void updateEntityFromDto(@MappingTarget Question question, QuestionInputDto dto);
 }
