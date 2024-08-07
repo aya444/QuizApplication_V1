@@ -1,7 +1,8 @@
 package com.aya.quizapp.service;
 
 import com.aya.quizapp.exception.QuestionNotFoundException;
-import com.aya.quizapp.model.dto.QuestionDto;
+import com.aya.quizapp.model.dto.QuestionInputDto;
+import com.aya.quizapp.model.dto.QuestionOutputDto;
 import com.aya.quizapp.model.entity.Question;
 import com.aya.quizapp.repository.QuestionRepo;
 import com.aya.quizapp.util.QuestionMapper;
@@ -21,33 +22,33 @@ public class QuestionService {
 
     private final QuestionMapper questionMapper = QuestionMapper.INSTANCE;
 
-    public List<QuestionDto> getAllQuestions(){
-        List<Question> questionList= this.questionRepo.findAllQuestionsSorted();
+    public List<QuestionOutputDto> getAllQuestions(){
+        List<Question> questionList= questionRepo.findAllQuestionsSorted();
         return questionList.stream()
-                .map(questionMapper::toDto)
+                .map(questionMapper::toOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public List<QuestionDto> getQuestionsByCategory(String category){
+    public List<QuestionOutputDto> getQuestionsByCategory(String category){
         List<Question> foundQuestionList = questionRepo.findByCategory(category);
         return foundQuestionList.stream()
-                .map(questionMapper::toDto)
+                .map(questionMapper::toOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public QuestionDto createQuestion(@Valid QuestionDto questionDto){
-        Optional.ofNullable(questionDto).orElseThrow(() -> new IllegalArgumentException("Question cannot be null"));
-        Question questionEntity = questionMapper.toEntity(questionDto);
+    public QuestionOutputDto createQuestion(@Valid QuestionInputDto questionInputDto){
+        Optional.ofNullable(questionInputDto).orElseThrow(() -> new IllegalArgumentException("Question cannot be null"));
+        Question questionEntity = questionMapper.toEntity(questionInputDto);
         Question savedQuestionEntity = questionRepo.save(questionEntity);
-        return questionMapper.toDto(savedQuestionEntity);
+        return questionMapper.toOutputDto(savedQuestionEntity);
     }
 
-    public QuestionDto editQuestion(Integer id, @Valid QuestionDto updatedQuestionDto) {
+    public QuestionOutputDto editQuestion(Integer id, @Valid QuestionInputDto updatedQuestionInputDto) {
         return questionRepo.findById(id)
                 .map(question -> {
-                    questionMapper.updateEntityFromDto(question, updatedQuestionDto);
+                    questionMapper.updateEntityFromDto(question, updatedQuestionInputDto);
                     Question updatedQuestion = questionRepo.save(question);
-                    return questionMapper.toDto(updatedQuestion);
+                    return questionMapper.toOutputDto(updatedQuestion);
                 })
                 .orElseThrow(() -> new QuestionNotFoundException("Question Id not found!"));
     }

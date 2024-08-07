@@ -2,7 +2,7 @@ package com.aya.quizapp.service;
 
 import com.aya.quizapp.exception.QuestionNotFoundException;
 import com.aya.quizapp.exception.QuizNotFoundException;
-import com.aya.quizapp.model.dto.QuestionDto;
+import com.aya.quizapp.model.dto.QuestionOutputDto;
 import com.aya.quizapp.model.dto.QuizDto;
 import com.aya.quizapp.model.entity.Question;
 import com.aya.quizapp.model.entity.Quiz;
@@ -40,14 +40,14 @@ public class QuizService {
         return quizMapper.toDto(quiz);
     }
 
-    public List<QuestionDto> getQuizQuestions(Integer id) {
+    public List<QuestionOutputDto> getQuizQuestions(Integer id) {
         Optional<Quiz> quizOptional = quizRepo.findById(id);
         Quiz quiz = quizOptional.get();
         List<Question> questionList = quiz.getQuestions();
-        List<QuestionDto> questionsDto = new ArrayList<>();
+        List<QuestionOutputDto> questionsOutputDto = new ArrayList<>();
 
         for (Question q : questionList) {
-            questionsDto.add(QuestionDto.builder()
+            questionsOutputDto.add(QuestionOutputDto.builder()
                     .id(q.getId())
                     .questionTitle(q.getQuestionTitle())
                     .option1(q.getOption1())
@@ -56,7 +56,7 @@ public class QuizService {
                     .option4(q.getOption4())
                     .build());
         }
-        return questionsDto;
+        return questionsOutputDto;
     }
 
     public int calculateResults(Integer id, @Valid List<Response> responseList) {

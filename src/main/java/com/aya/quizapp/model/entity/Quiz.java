@@ -1,6 +1,5 @@
 package com.aya.quizapp.model.entity;
 
-import com.aya.quizapp.model.dto.QuizDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,11 +24,4 @@ public class Quiz {
     @ManyToMany
     private List<Question> questions;
 
-//    public static Quiz toEntity(QuizDto quizDto){
-//        return Quiz.builder()
-//                .id(quizDto.getId())
-//                .title(quizDto.getTitle())
-//                .questions(quizDto.getQuestions())
-//                .build();
-//    }
 }

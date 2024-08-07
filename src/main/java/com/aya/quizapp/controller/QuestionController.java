@@ -2,7 +2,8 @@ package com.aya.quizapp.controller;
 
 
 import com.aya.quizapp.exception.QuestionNotFoundException;
-import com.aya.quizapp.model.dto.QuestionDto;
+import com.aya.quizapp.model.dto.QuestionInputDto;
+import com.aya.quizapp.model.dto.QuestionOutputDto;
 import com.aya.quizapp.service.QuestionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public class QuestionController {
 
     // TODO make a Global Exception Handler
     @GetMapping("all")
-    public ResponseEntity<List<QuestionDto>> getAllQuetions(){
+    public ResponseEntity<List<QuestionOutputDto>> getAllQuetions(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getAllQuestions());
         }catch (Exception e){
@@ -35,7 +36,7 @@ public class QuestionController {
     }
 
     @GetMapping("category/{cat}")
-    public ResponseEntity<List<QuestionDto>> getQuestionsByCategory(@PathVariable("cat") @NotNull String category){
+    public ResponseEntity<List<QuestionOutputDto>> getQuestionsByCategory(@PathVariable("cat") @NotNull String category){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(questionService.getQuestionsByCategory(category));
         }catch (Exception e){
@@ -45,9 +46,9 @@ public class QuestionController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<QuestionDto> addQuestions(@RequestBody @Valid QuestionDto questionDto){
+    public ResponseEntity<QuestionOutputDto> addQuestions(@RequestBody QuestionInputDto questionInputDto){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(questionDto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(questionService.createQuestion(questionInputDto));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -55,9 +56,9 @@ public class QuestionController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> editQuestion(@PathVariable @NotNull Integer id, @RequestBody @Valid QuestionDto updatedQuestionDto) {
+    public ResponseEntity<?> editQuestion(@PathVariable @NotNull Integer id, @RequestBody @Valid QuestionInputDto updatedQuestionInputDto) {
         try {
-            QuestionDto updatedQuestion = questionService.editQuestion(id, updatedQuestionDto);
+            QuestionOutputDto updatedQuestion = questionService.editQuestion(id, updatedQuestionInputDto);
             return ResponseEntity.status(HttpStatus.OK).body(updatedQuestion);
         } catch (QuestionNotFoundException e) {
             e.printStackTrace();

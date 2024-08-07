@@ -1,9 +1,5 @@
 package com.aya.quizapp.model.entity;
 
-
-import com.aya.quizapp.model.dto.QuestionDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,21 +31,5 @@ public class Question {
     private String rightAnswer;
     @Column(name = "category", nullable = false)
     private String category;
-
-//    public static Question toEntity(QuestionDto questiondto){
-//        return Question.builder()
-//                .id(questiondto.getId())
-//                .questionTitle(questiondto.getQuestionTitle())
-//                .option1(questiondto.getOption1())
-//                .option2(questiondto.getOption2())
-//                .option3(questiondto.getOption3())
-//                .option4(questiondto.getOption4())
-//                .difficultyLevel(questiondto.getDifficultyLevel())
-//                .rightAnswer(questiondto.getRightAnswer())
-//                .category(questiondto.getCategory())
-//                .build();
-//    }
-
-
 
 }

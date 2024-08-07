@@ -1,7 +1,6 @@
 package com.aya.quizapp.model.dto;
 
 import com.aya.quizapp.model.entity.Question;
-import com.aya.quizapp.model.entity.Quiz;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -21,12 +20,4 @@ public class QuizDto {
 
     @NotNull(message = "List cannot be blank")
     private List<Question> questions;
-
-//    public static QuizDto toDto(Quiz quiz){
-//        return QuizDto.builder()
-//                .id(quiz.getId())
-//                .title(quiz.getTitle())
-//                .questions(quiz.getQuestions())
-//                .build();
-//    }
 }

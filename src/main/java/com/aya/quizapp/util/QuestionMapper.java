@@ -1,8 +1,10 @@
 package com.aya.quizapp.util;
 
-import com.aya.quizapp.model.dto.QuestionDto;
+import com.aya.quizapp.model.dto.QuestionInputDto;
+import com.aya.quizapp.model.dto.QuestionOutputDto;
 import com.aya.quizapp.model.entity.Question;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
@@ -10,9 +12,10 @@ import org.mapstruct.factory.Mappers;
 public interface QuestionMapper {
     QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
 
-    QuestionDto toDto(Question question);
+    QuestionOutputDto toOutputDto(Question question);
 
-    Question toEntity(QuestionDto questionDto);
+    Question toEntity(QuestionInputDto questionInputDto);
 
-    void updateEntityFromDto(@MappingTarget Question question, QuestionDto dto);
+    @Mapping(target = "id", ignore = true) // Ignore ID during updates
+    void updateEntityFromDto(@MappingTarget Question question, QuestionInputDto dto);
 }

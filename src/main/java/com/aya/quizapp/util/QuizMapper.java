@@ -10,5 +10,4 @@ public interface QuizMapper {
     QuizMapper INSTANCE = Mappers.getMapper(QuizMapper.class);
 
     QuizDto toDto(Quiz quiz);
-
 }
