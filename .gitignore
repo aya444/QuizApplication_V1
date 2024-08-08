@@ -35,6 +35,3 @@ build/
 
 ### Maven ###
 .mvn/
-
-.jpb
-.jpb/
