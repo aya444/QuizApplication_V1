@@ -1,6 +1,8 @@
 package com.aya.quizapp.service;
 
+import com.aya.quizapp.exception.InvalidQuestionDataException;
 import com.aya.quizapp.exception.InvalidQuizDataException;
+import com.aya.quizapp.exception.ResultsNotFoundException;
 import com.aya.quizapp.exception.QuestionNotFoundException;
 import com.aya.quizapp.model.dto.QuestionInputDto;
 import com.aya.quizapp.model.dto.QuestionOutputDto;
@@ -32,20 +34,21 @@ public class QuestionService {
 
     public List<QuestionOutputDto> getQuestionsByCategory(String category) {
         List<Question> foundQuestionList = questionRepo.findByCategory(category);
+        if(foundQuestionList.isEmpty()) throw new ResultsNotFoundException("No questions found for category: " + category);
         return foundQuestionList.stream()
                 .map(questionMapper::fromEntityToDto)
                 .collect(Collectors.toList());
     }
 
     public QuestionOutputDto createQuestion(@Valid QuestionInputDto questionInputDto) {
-        Optional.ofNullable(questionInputDto).orElseThrow(() -> new InvalidQuizDataException("Question cannot be null!"));
+        Optional.ofNullable(questionInputDto).orElseThrow(() -> new InvalidQuizDataException("Question data cannot be null!"));
         Question questionEntity = questionMapper.fromDtoToEntity(questionInputDto);
         Question savedQuestionEntity = questionRepo.save(questionEntity);
         return questionMapper.fromEntityToDto(savedQuestionEntity);
     }
 
     public QuestionOutputDto editQuestion(Integer id, @Valid QuestionInputDto updatedQuestionInputDto) {
-        Optional.ofNullable(updatedQuestionInputDto).orElseThrow(() -> new InvalidQuizDataException("Updated question date cannot be null!"));
+        Optional.ofNullable(updatedQuestionInputDto).orElseThrow(() -> new InvalidQuestionDataException("Updated question data cannot be null!"));
         return questionRepo.findById(id)
                 .map(question -> {
                     questionMapper.updateEntityFromDto(question, updatedQuestionInputDto);

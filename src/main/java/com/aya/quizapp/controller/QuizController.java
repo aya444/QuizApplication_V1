@@ -1,9 +1,8 @@
 package com.aya.quizapp.controller;
 
 
-import com.aya.quizapp.exception.InvalidQuizDataException;
-import com.aya.quizapp.exception.QuestionNotFoundException;
-import com.aya.quizapp.exception.QuizNotFoundException;
+import com.aya.quizapp.model.dto.QuestionOutputDto;
+import com.aya.quizapp.model.dto.QuizDto;
 import com.aya.quizapp.model.entity.Response;
 import com.aya.quizapp.service.QuizService;
 import jakarta.validation.Valid;
@@ -22,40 +21,22 @@ public class QuizController {
     private QuizService quizService;
 
     @PostMapping("create")
-    public ResponseEntity<?> createQuiz(@RequestParam @NotNull String category, @RequestParam @NotNull int numOfQuestions, @RequestParam @NotNull String title) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(quizService.createQuiz(category, numOfQuestions, title));
-        } catch (QuestionNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (InvalidQuizDataException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
-        }
+    public ResponseEntity<QuizDto> createQuiz(@RequestParam @NotNull String category, @RequestParam @NotNull int numOfQuestions, @RequestParam @NotNull String title) {
+        QuizDto quiz = quizService.createQuiz(category, numOfQuestions, title);
+        return new ResponseEntity<>(quiz, HttpStatus.CREATED);
     }
 
 
     @GetMapping("get/{id}")
-    public ResponseEntity<?> getQuizQuestionsById(@PathVariable @NotNull Integer id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(quizService.getQuizQuestions(id));
-        } catch (QuizNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
-        }
+    public ResponseEntity<List<QuestionOutputDto>> getQuizQuestionsById(@PathVariable @NotNull Integer id) {
+        List<QuestionOutputDto> questions = quizService.getQuizQuestions(id);
+        return new ResponseEntity<>(questions, HttpStatus.OK);
+
     }
 
     @PostMapping("submit/{id}")
-    public ResponseEntity<?> getResult(@PathVariable @NotNull Integer id, @RequestBody @Valid List<Response> responseList) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(quizService.calculateResults(id, responseList));
-        } catch (QuizNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (InvalidQuizDataException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
-        }
+    public ResponseEntity<String> getResult(@PathVariable @NotNull Integer id, @RequestBody @Valid List<Response> responseList) {
+        Integer result = quizService.calculateResults(id, responseList);
+        return new ResponseEntity<>("The result is " + result + "!", HttpStatus.OK);
     }
 }

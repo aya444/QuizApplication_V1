@@ -26,12 +26,12 @@ public class QuizService {
 
     public QuizDto createQuiz(String category, int numOfQuestions, String title) {
         if (numOfQuestions <= 0) {
-            throw new InvalidQuizDataException("Number of questions must be greater than 0");
+            throw new InvalidQuizDataException("Number of questions must be greater than 0!");
         }
 
         List<Question> foundRandomQuestionsForCategory = quizRepository.findRandomQuestionsByCategory(category, numOfQuestions);
         if (foundRandomQuestionsForCategory.isEmpty()) {
-            throw new QuestionNotFoundException("No questions found for the given category: " + category);
+            throw new QuestionNotFoundException("No questions found for category: " + category);
         }
 
         Quiz quiz = quizRepository.save(Quiz.builder()
@@ -44,7 +44,7 @@ public class QuizService {
     public List<QuestionOutputDto> getQuizQuestions(Integer id) {
         Optional<Quiz> quizOptional = quizRepository.findById(id);
 
-        if (quizOptional.isEmpty()) throw new QuizNotFoundException("Quiz Not Found!");
+        if (quizOptional.isEmpty()) throw new QuizNotFoundException("Quiz Id not found!");
 
         Quiz quiz = quizOptional.get();
         List<Question> questionList = quiz.getQuestions();
@@ -63,20 +63,20 @@ public class QuizService {
         return questionsOutputDto;
     }
 
-    public int calculateResults(Integer id, @Valid List<Response> responseList) {
-        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new QuizNotFoundException("Quiz Not Found!"));
+    public Integer calculateResults(Integer id, @Valid List<Response> responseList) {
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new QuizNotFoundException("Quiz Id not found!"));
         List<Question> questionsList = quiz.getQuestions();
 
         if (responseList.size() != questionsList.size()) {
             throw new InvalidQuizDataException("Mismatch between the number of responses and questions!");
         }
 
-        int total = 0;
+        Integer result = 0;
         for (int i = 0; i < responseList.size(); i++) {
             if (responseList.get(i).getResponse().equals(questionsList.get(i).getRightAnswer())) {
-                total++;
+                result++;
             }
         }
-        return total;
+        return result;
     }
 }
