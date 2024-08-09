@@ -1,0 +1,80 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="aya">
+        <createTable tableName="question">
+            <column name="id" type="serial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="question_title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="option1" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="option2" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="option3" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="option4" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="difficulty_level" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="right_answer" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="aya">
+        <createTable tableName="quiz">
+            <column name="id" type="serial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="aya">
+        <createTable tableName="quiz_questions">
+            <column name="quiz_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Primary Key Constraint -->
+        <addPrimaryKey columnNames="quiz_id, question_id"
+                       constraintName="pk_quiz_questions"
+                       tableName="quiz_questions"/>
+
+        <!-- Foreign Key Constraints -->
+        <addForeignKeyConstraint baseTableName="quiz_questions"
+                                 baseColumnNames="quiz_id"
+                                 constraintName="fk_quiz_questions_quiz"
+                                 referencedTableName="quiz"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="quiz_questions"
+                                 baseColumnNames="question_id"
+                                 constraintName="fk_quiz_questions_question"
+                                 referencedTableName="question"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+
+</databaseChangeLog>

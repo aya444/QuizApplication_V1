@@ -4,7 +4,7 @@ spring:
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db.changelog/db.changelog-master.xml
 
   datasource:
     url: jdbc:postgresql://localhost:5432/question_db?useSSL=false
@@ -12,11 +12,11 @@ spring:
     password: Podman56
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  show-sql: true
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#
+#  show-sql: true

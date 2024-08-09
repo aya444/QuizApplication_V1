@@ -111,6 +111,7 @@
 				<artifactId>liquibase-maven-plugin</artifactId>
 				<version>4.29.1</version>
 				<configuration>
+					<changeLogFile>src/main/resources/db.changelog/db.changelog-master.xml</changeLogFile>
 					<propertyFile>src/main/resources/application.yaml</propertyFile>
 					<propertyFileWillOverride>true</propertyFileWillOverride>
 				</configuration>
