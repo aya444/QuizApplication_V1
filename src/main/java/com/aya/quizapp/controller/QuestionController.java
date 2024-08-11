@@ -9,18 +9,20 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("question")
-@Validated
 public class QuestionController {
 
+    private final QuestionService questionService;
+
     @Autowired
-    private QuestionService questionService;
+    private QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @GetMapping("all")
     public ResponseEntity<List<QuestionOutputDto>> getAllQuestions() {
