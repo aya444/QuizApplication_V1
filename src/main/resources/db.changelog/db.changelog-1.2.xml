@@ -4,8 +4,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="db.changelog/db.changelog-1.0.xml"/>
-    <include file="db.changelog/db.changelog-1.1.xml"/>
-    <include file="db.changelog/db.changelog-1.2.xml"/>
+    <changeSet id="5" author="aya">
+        <dropColumn tableName="question" columnName="new_column_name"/>
+    </changeSet>
 
 </databaseChangeLog>
