@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
 public class QuestionInputDto {
 
     private Integer id;
@@ -23,11 +24,11 @@ public class QuestionInputDto {
     @NotBlank(message = "Option4 cannot be blank")
     private String option4;
 
-    @NotBlank(message = "Right Answer cannot be blank")
-    private String rightAnswer;
-
     @NotBlank(message = "Difficulty Level cannot be blank")
     private String difficultyLevel;
+
+    @NotBlank(message = "Right Answer cannot be blank")
+    private String rightAnswer;
 
     @NotBlank(message = "Category cannot be blank")
     private String category;

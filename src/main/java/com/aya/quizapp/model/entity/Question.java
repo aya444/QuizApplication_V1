@@ -6,6 +6,7 @@ import lombok.*;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "question")
 public class Question {
 

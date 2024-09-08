@@ -13,5 +13,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     @Query("SELECT q FROM Question q ORDER BY q.id ASC ")
     List<Question> findAllQuestionsSorted();
 
-    List<Question> findByCategory(String category);
+     List<Question> findByCategory(String category);
 }
