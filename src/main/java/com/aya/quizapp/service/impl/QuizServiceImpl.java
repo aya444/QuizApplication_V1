@@ -24,7 +24,10 @@ public class QuizServiceImpl implements QuizService {
     @Autowired
     private QuizRepository quizRepository;
 
-    private final QuizMapper quizMapper = QuizMapper.INSTANCE;
+    // Use "@Autowired" instead of "private final QuizMapper quizMapper = QuizMapper.INSTANCE;"
+    // The problem with that, is you are manually injecting the quizMapper to QuizService, thus the Mockito is inable to inject the mock during testing
+    @Autowired
+    private QuizMapper quizMapper;
 
     @Override
     public QuizDto createQuiz(String category, Integer numOfQuestions, String title) {
