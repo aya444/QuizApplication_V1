@@ -6,12 +6,9 @@ import com.aya.quizapp.model.entity.Question;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface QuestionMapper {
-    QuestionMapper INSTANCE = Mappers.getMapper(QuestionMapper.class);
-
     QuestionOutputDto fromEntityToDto(Question question);
 
     Question fromDtoToEntity(QuestionInputDto questionInputDto);

@@ -24,7 +24,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionRepository questionRepo;
 
-    private final QuestionMapper questionMapper = QuestionMapper.INSTANCE;
+    @Autowired
+    private QuestionMapper questionMapper;
 
     @Override
     public List<QuestionOutputDto> getAllQuestions() {
