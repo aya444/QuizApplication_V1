@@ -1,7 +1,6 @@
 package com.aya.quizapp.service.impl;
 
 import com.aya.quizapp.exception.InvalidQuestionDataException;
-import com.aya.quizapp.exception.InvalidQuizDataException;
 import com.aya.quizapp.exception.ResultsNotFoundException;
 import com.aya.quizapp.exception.QuestionNotFoundException;
 import com.aya.quizapp.model.dto.QuestionInputDto;
@@ -47,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionOutputDto createQuestion(@Valid QuestionInputDto questionInputDto) {
-        Optional.ofNullable(questionInputDto).orElseThrow(() -> new InvalidQuizDataException("Question data cannot be null!"));
+        Optional.ofNullable(questionInputDto).orElseThrow(() -> new InvalidQuestionDataException("Question data cannot be null!"));
         Question questionEntity = questionMapper.fromDtoToEntity(questionInputDto);
         Question savedQuestionEntity = questionRepo.save(questionEntity);
         return questionMapper.fromEntityToDto(savedQuestionEntity);
